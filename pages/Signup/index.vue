@@ -7,7 +7,7 @@
 
         <div class="mb-6">
           <label for="email" class="label">E-mail Address</label>
-          <input type="email" v-model="email" class="input" id="email" placeholder="andy@web-crunch.com">
+          <input type="email" v-model="email" class="input" id="email" placeholder="email">
         </div>
 
         <div class="mb-6">
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Signup',
   data () {
@@ -45,8 +47,12 @@ export default {
     this.checkedSignedIn()
   },
   methods: {
-    signup () {
-      this.$http.plain.post('/signup', { email: this.email, password: this.password, password_confirmation: this.password_confirmation })
+    async signup () {
+      await axios.post(`${this.$axios.defaults.baseURL}/signup`, {
+        email: this.email,
+        password: this.password,
+        password_confirmation: this.password_confirmation
+      })
         .then(response => this.signupSuccessful(response))
         .catch(error => this.signupFailed(error))
     },
