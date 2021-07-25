@@ -1,39 +1,29 @@
 <template>
-  <div class="container">
-    <Header />
-    <div>
-      <p class="h3 title mx-auto max-width-1">
-        Sandragon
-      </p>
-    </div>
-  </div>
+  <v-layout>
+    <v-flex>
+      <v-list>
+        <v-list-tile v-for="example in examples" :key="example.id" :style="{backgroundColor: example.colour}">
+          <v-list-tile-content>{{example.name}}</v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
-import axios from 'axios'
-import Header from '@/components/Header.vue'
-
 export default {
-  components: {
-    Header
-  },
   data () {
     return {
-      response: 'Initial State'
+      examples: []
     }
-  },
-  created () {
-    return this.asyncData()
   },
   methods: {
-    async asyncData () {
-      const res = await axios.get(this.$axios.defaults.baseURL)
-      this.response = res.data
+    async updateExamples () {
+      this.examples = await this.$axios.$get('/examples')
     }
+  },
+  mounted () {
+    this.updateExamples()
   }
 }
 </script>
-
-<style scoped>
-
-</style>

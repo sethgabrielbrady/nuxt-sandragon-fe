@@ -33,15 +33,20 @@ export default {
     return {
       email: '',
       password: '',
-      error: ''
+      error: '',
+      responseData: '',
+      counter: 0
     }
   },
   created () {
-    console.log('Sign in')
-    // this.checkSignedIn()
+    this.counter += 1
+    this.$store.state.localStorage.count = this.counter
+    console.log('count', this.$store.state.localStorage.count)
   },
   updated () {
-    this.checkSignedIn()
+    this.counter += 1
+    console.log('status', this.$store.state.localStorage.status.csrf)
+    console.log('signed in', this.$store.state.localStorage.status.signedIn)
   },
   methods: {
     async signin () {
@@ -57,20 +62,19 @@ export default {
         this.signinFailed(response)
         return
       }
-      localStorage.csrf = response.data.csrf
-      localStorage.signedIn = true
+      this.$store.state.localStorage.status.csrf = response.data.csrf
+      this.$store.state.localStorage.status.signedIn = true
       this.error = ''
-      this.$router.replace('/elements')
     },
     signinFailed (error) {
       this.error = (error.response && error.response.data && error.response.data.error) || ''
-      delete localStorage.csrf
-      delete localStorage.signedIn
+      delete this.$store.state.localStorage.status.csrf
+      delete this.$store.state.localStorage.status.signedIn
     },
     checkSignedIn () {
       if (typeof window !== 'undefined') {
-        if (localStorage.signedIn) {
-          this.$router.replace('/elements')
+        if (this.$store.state.localStorage.status.signedIn) {
+          alert('signed in!')
         }
       }
     }
