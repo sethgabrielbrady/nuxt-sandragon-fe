@@ -33,50 +33,17 @@ export default {
     return {
       email: '',
       password: '',
-      error: '',
-      responseData: '',
-      counter: 0
+      error: ''
     }
-  },
-  created () {
-    this.counter += 1
-    this.$store.state.localStorage.count = this.counter
-    console.log('count', this.$store.state.localStorage.count)
-  },
-  updated () {
-    this.counter += 1
-    console.log('status', this.$store.state.localStorage.status.csrf)
-    console.log('signed in', this.$store.state.localStorage.status.signedIn)
   },
   methods: {
     async signin () {
-      await axios.post(`${this.$axios.defaults.baseURL}/signin`, {
+      await axios.get(`${this.$axios.defaults.baseURL}api/users/sign_in`, {
         email: this.email,
         password: this.password
       })
-        .then(response => this.signinSuccessful(response))
-        .catch(error => this.signinFailed(error))
-    },
-    signinSuccessful (response) {
-      if (!response.data.csrf) {
-        this.signinFailed(response)
-        return
-      }
-      this.$store.state.localStorage.status.csrf = response.data.csrf
-      this.$store.state.localStorage.status.signedIn = true
-      this.error = ''
-    },
-    signinFailed (error) {
-      this.error = (error.response && error.response.data && error.response.data.error) || ''
-      delete this.$store.state.localStorage.status.csrf
-      delete this.$store.state.localStorage.status.signedIn
-    },
-    checkSignedIn () {
-      if (typeof window !== 'undefined') {
-        if (this.$store.state.localStorage.status.signedIn) {
-          alert('signed in!')
-        }
-      }
+        .then(alert('success'))
+        .catch(alert('fail'))
     }
   }
 }

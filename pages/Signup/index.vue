@@ -40,44 +40,15 @@ export default {
       error: ''
     }
   },
-  created () {
-    this.checkedSignedIn()
-  },
-  updated () {
-    this.checkedSignedIn()
-  },
   methods: {
     async signup () {
-      await axios.post(`${this.$axios.defaults.baseURL}/signup`, {
+      await axios.get(`${this.$axios.defaults.baseURL}api/users/sign_up`, {
         email: this.email,
         password: this.password,
         password_confirmation: this.password_confirmation
       })
-        .then(response => this.signupSuccessful(response))
-        .catch(error => this.signupFailed(error))
-    },
-    signupSuccessful (response) {
-      if (!response.data.csrf) {
-        this.signupFailed(response)
-        return
-      }
-
-      localStorage.csrf = response.data.csrf
-      localStorage.signedIn = true
-      this.error = ''
-      this.$router.replace('/elements')
-    },
-    signupFailed (error) {
-      this.error = (error.response && error.response.data && error.response.data.error) || 'Something went wrong'
-      delete localStorage.csrf
-      delete localStorage.signedIn
-    },
-    checkedSignedIn () {
-      if (typeof window !== 'undefined') {
-        if (localStorage.signedIn) {
-          this.$router.replace('/elements')
-        }
-      }
+        .then(alert('success'))
+        .catch(alert('fail'))
     }
   }
 }
